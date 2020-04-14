@@ -12,8 +12,13 @@ import {
 import { Button } from '@wordpress/components';
 import { compose } from '@wordpress/compose';
 import classnames from 'classnames';
-import { get } from 'lodash';
 import PropTypes from 'prop-types';
+import { withSelect } from '@wordpress/data';
+
+/**
+ * WooCommerce dependencies
+ */
+import { OPTIONS_STORE_NAME } from '@woocommerce/data';
 
 /**
  * Internal dependencies
@@ -22,7 +27,6 @@ import QuickLinks from '../quick-links';
 import StatsOverview from './stats-overview';
 import './style.scss';
 import { isOnboardingEnabled } from 'dashboard/utils';
-import withSelect from 'wc-api/with-select';
 import TaskListPlaceholder from '../task-list/placeholder';
 
 const TaskList = lazy( () =>
@@ -52,7 +56,12 @@ export const Layout = ( props ) => {
 		};
 	}, [] );
 
-	const { query, requestingTaskList, taskListComplete, taskListHidden } = props;
+	const {
+		query,
+		requestingTaskList,
+		taskListComplete,
+		taskListHidden,
+	} = props;
 	const isTaskListEnabled = taskListHidden === false && ! taskListComplete;
 	const isDashboardShown = ! isTaskListEnabled || ! query.task;
 
@@ -114,8 +123,7 @@ export const Layout = ( props ) => {
 		>
 			{ isDashboardShown
 				? renderColumns()
-				: isTaskListEnabled && renderTaskList()
-			}
+				: isTaskListEnabled && renderTaskList() }
 		</div>
 	);
 };
@@ -141,24 +149,21 @@ Layout.propTypes = {
 
 export default compose(
 	withSelect( ( select ) => {
-		const {
-			getOptions,
-			isGetOptionsRequesting,
-		} = select( 'wc-api' );
+		const { getOption, isResolving } = select( OPTIONS_STORE_NAME );
 
 		if ( isOnboardingEnabled() ) {
-			const options = getOptions( [
-				'woocommerce_task_list_complete',
-				'woocommerce_task_list_hidden',
-			] );
-			
 			return {
-				requestingTaskList: isGetOptionsRequesting( [
-					'woocommerce_task_list_complete',
-					'woocommerce_task_list_hidden',
-				] ),
-				taskListComplete: get( options, [ 'woocommerce_task_list_complete' ] ),
-				taskListHidden: get( options, [ 'woocommerce_task_list_hidden' ] ) === 'yes',
+				taskListComplete:
+					getOption( 'woocommerce_task_list_complete' ) === 'yes',
+				taskListHidden:
+					getOption( 'woocommerce_task_list_hidden' ) === 'yes',
+				requestingTaskList:
+					isResolving( 'getOption', [
+						'woocommerce_task_list_complete',
+					] ) ||
+					isResolving( 'getOption', [
+						'woocommerce_task_list_hidden',
+					] ),
 			};
 		}
 
