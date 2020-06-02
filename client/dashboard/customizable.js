@@ -4,7 +4,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { Fragment, Suspense, lazy, useState } from '@wordpress/element';
 import { compose } from '@wordpress/compose';
-import { partial, get, identity } from 'lodash';
+import { get, partial } from 'lodash';
 import { IconButton, Icon, Dropdown, Button } from '@wordpress/components';
 import { applyFilters } from '@wordpress/hooks';
 
@@ -15,7 +15,6 @@ import { H, Spinner } from '@woocommerce/components';
 import {
 	SETTINGS_STORE_NAME,
 	useUserPreferences,
-	withCurrentUserHydration,
 } from '@woocommerce/data';
 
 /**
@@ -40,7 +39,6 @@ const TaskList = lazy( () =>
 
 const DASHBOARD_FILTERS_FILTER = 'woocommerce_admin_dashboard_filters';
 const filters = applyFilters( DASHBOARD_FILTERS_FILTER, [] );
-const hydrateUser = window.wcSettings.currentUserData;
 
 const mergeSectionsWithDefaults = ( prefSections ) => {
 	if ( ! prefSections || prefSections.length === 0 ) {
@@ -368,8 +366,5 @@ export default compose(
 		}
 
 		return withSelectData;
-	} ),
-	hydrateUser
-		? withCurrentUserHydration( hydrateUser )
-		: identity
+	} )
 )( CustomizableDashboard );
