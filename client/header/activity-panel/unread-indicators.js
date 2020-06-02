@@ -1,7 +1,7 @@
 /**
  * WooCommerce dependencies
  */
-import { SETTINGS_STORE_NAME } from '@woocommerce/data';
+import { SETTINGS_STORE_NAME, USER_STORE_NAME } from '@woocommerce/data';
 
 /**
  * Internal dependencies
@@ -11,13 +11,21 @@ import { getSetting } from '@woocommerce/wc-admin-settings';
 
 export function getUnreadNotes( select ) {
 	const {
-		getCurrentUserData,
 		getNotes,
 		getNotesError,
 		isGetNotesRequesting,
 	} = select( 'wc-api' );
-	const userData = getCurrentUserData();
-	if ( ! userData ) {
+
+	const { getCurrentUser } = select( USER_STORE_NAME );
+	const userData = getCurrentUser();
+	const lastRead = parseInt(
+		userData &&
+		userData.woocommerce_meta &&
+		userData.woocommerce_meta.activity_panel_inbox_last_read,
+		10
+	);
+
+	if ( ! lastRead ) {
 		return null;
 	}
 	const notesQuery = {
@@ -41,8 +49,7 @@ export function getUnreadNotes( select ) {
 
 	return (
 		latestNote[ 0 ] &&
-		new Date( latestNote[ 0 ].date_created_gmt + 'Z' ).getTime() >
-			userData.activity_panel_inbox_last_read
+		new Date( latestNote[ 0 ].date_created_gmt + 'Z' ).getTime() > lastRead
 	);
 }
 
