@@ -10,7 +10,6 @@ import options from './options';
 import reportItems from './reports/items';
 import reportStats from './reports/stats';
 import reviews from './reviews';
-import user from './user';
 
 function createWcApiSpec() {
 	return {
@@ -21,7 +20,6 @@ function createWcApiSpec() {
 			...notes.mutations,
 			...onboarding.mutations,
 			...options.mutations,
-			...user.mutations,
 		},
 		selectors: {
 			...imports.selectors,
@@ -32,7 +30,6 @@ function createWcApiSpec() {
 			...reportItems.selectors,
 			...reportStats.selectors,
 			...reviews.selectors,
-			...user.selectors,
 		},
 		operations: {
 			read( resourceNames ) {
@@ -50,7 +47,6 @@ function createWcApiSpec() {
 					...reportItems.operations.read( resourceNames ),
 					...reportStats.operations.read( resourceNames ),
 					...reviews.operations.read( resourceNames ),
-					...user.operations.read( resourceNames ),
 				];
 			},
 			update( resourceNames, data ) {
@@ -60,7 +56,6 @@ function createWcApiSpec() {
 					...notes.operations.update( resourceNames, data ),
 					...onboarding.operations.update( resourceNames, data ),
 					...options.operations.update( resourceNames, data ),
-					...user.operations.update( resourceNames, data ),
 				];
 			},
 			updateLocally( resourceNames, data ) {
