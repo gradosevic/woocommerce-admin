@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { Fragment /*, useEffect */ } from '@wordpress/element';
+import { Fragment, useEffect } from '@wordpress/element';
 import { compose } from '@wordpress/compose';
 import Gridicon from 'gridicons';
 
@@ -53,21 +53,19 @@ const renderNotes = ( { lastRead, notes } ) => {
 
 const InboxPanel = ( props ) => {
 	const { isError, isRequesting, notes } = props;
-	const { /* updateUserPreferences, */ ...userPrefs } = useUserPreferences();
+	const { updateUserPreferences, ...userPrefs } = useUserPreferences();
 	const lastRead = userPrefs.activity_panel_inbox_last_read;
 
-	// @todo - this is apparently NOT the right way to do this!
-	// useEffect( () => {
-	// 	const mountTime = Date.now();
-	// 
-	// 	return () => {
-	// 		console.log( 'updating last read', mountTime );
-	// 		const userDataFields = {
-	// 			activity_panel_inbox_last_read: mountTime,
-	// 		};
-	// 		updateUserPreferences( userDataFields );
-	// 	};
-	// } );
+	useEffect( () => {
+		const mountTime = Date.now();
+	
+		return () => {
+			const userDataFields = {
+				activity_panel_inbox_last_read: mountTime,
+			};
+			updateUserPreferences( userDataFields );
+		};
+	}, [] );
 
 	if ( isError ) {
 		const title = __(
