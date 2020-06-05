@@ -6,7 +6,7 @@ import { withSelect } from '@wordpress/data';
 import { Component, lazy, Suspense } from '@wordpress/element';
 import { Router, Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { get, isFunction } from 'lodash';
+import { get, isFunction, identity } from 'lodash';
 
 /**
  * WooCommerce dependencies
@@ -18,6 +18,7 @@ import {
 	OPTIONS_STORE_NAME,
 	PLUGINS_STORE_NAME,
 	withPluginsHydration,
+	withOptionsHydration,
 } from '@woocommerce/data';
 
 /**
@@ -214,6 +215,11 @@ class _PageLayout extends Component {
 export const PageLayout = compose(
 	// Use the useFilters HoC so PageLayout is re-rendered when filters are used to add new pages or reports
 	useFilters( [ PAGES_FILTER, REPORTS_FILTER ] ),
+	window.wcSettings.preloadOptions
+		? withOptionsHydration( {
+				...window.wcSettings.preloadOptions,
+		  } )
+		: identity,
 	withSelect( ( select ) => {
 		const { getOption } = select( OPTIONS_STORE_NAME );
 		const homepageEnabled =

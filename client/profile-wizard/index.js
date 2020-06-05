@@ -16,7 +16,6 @@ import {
 	PLUGINS_STORE_NAME,
 	withSettingsHydration,
 	withPluginsHydration,
-	withOptionsHydration,
 } from '@woocommerce/data';
 
 /**
@@ -248,7 +247,9 @@ const hydrateSettings =
 export default compose(
 	withSelect( ( select ) => {
 		const { getNotes } = select( 'wc-api' );
-		const { getProfileItems, getOnboardingError } = select( ONBOARDING_STORE_NAME );
+		const { getProfileItems, getOnboardingError } = select(
+			ONBOARDING_STORE_NAME
+		);
 		const { getActivePlugins } = select( PLUGINS_STORE_NAME );
 
 		const notesQuery = {
@@ -287,11 +288,6 @@ export default compose(
 		? withPluginsHydration( {
 				...window.wcSettings.plugins,
 				jetpackStatus: window.wcSettings.dataEndpoints.jetpackStatus,
-		  } )
-		: identity,
-	window.wcSettings.preloadOptions
-		? withOptionsHydration( {
-				...window.wcSettings.preloadOptions,
 		  } )
 		: identity
 )( ProfileWizard );

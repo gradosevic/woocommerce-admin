@@ -3,7 +3,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import { Component, cloneElement, Fragment } from '@wordpress/element';
-import { isEqual, identity } from 'lodash';
+import { isEqual } from 'lodash';
 import { compose } from '@wordpress/compose';
 import classNames from 'classnames';
 import {
@@ -25,7 +25,6 @@ import {
 	PLUGINS_STORE_NAME,
 	OPTIONS_STORE_NAME,
 	ONBOARDING_STORE_NAME,
-	withOptionsHydration,
 } from '@woocommerce/data';
 
 /**
@@ -436,10 +435,5 @@ export default compose(
 		return {
 			updateOptions,
 		};
-	} ),
-	window.wcSettings.preloadOptions
-		? withOptionsHydration( {
-				...window.wcSettings.preloadOptions,
-		  } )
-		: identity
+	} )
 )( TaskDashboard );
