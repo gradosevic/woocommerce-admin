@@ -302,12 +302,15 @@ class CustomizableDashboard extends Component {
 	}
 
 	render() {
-		const { query, taskListHidden, taskListComplete } = this.props;
+		const {
+			query,
+			taskListHidden,
+			taskListComplete,
+			homepageEnabled,
+		} = this.props;
 
 		const isTaskListEnabled =
-			isOnboardingEnabled() &&
-			! taskListHidden &&
-			! window.wcAdminFeatures.homepage;
+			isOnboardingEnabled() && ! taskListHidden && ! homepageEnabled;
 
 		const isDashboardShown =
 			! isTaskListEnabled || ( ! query.task && taskListComplete );
@@ -340,6 +343,9 @@ export default compose(
 		};
 
 		if ( isOnboardingEnabled() ) {
+			withSelectData.homepageEnabled =
+				window.wcAdminFeatures.homepage &&
+				getOption( 'woocommerce_homescreen_enabled' ) === 'yes';
 			withSelectData.taskListHidden =
 				getOption( 'woocommerce_task_list_hidden' ) === 'yes';
 			withSelectData.taskListComplete =
