@@ -45,7 +45,7 @@ class Appearance extends Component {
 			stepIndex: 0,
 			isUpdatingLogo: false,
 			isUpdatingNotice: false,
-			storeNoticeText: props.options.demoStoreNotice || '',
+			storeNoticeText: props.demoStoreNotice || '',
 		};
 
 		this.completeStep = this.completeStep.bind( this );
@@ -67,7 +67,7 @@ class Appearance extends Component {
 
 	componentDidUpdate( prevProps ) {
 		const { isPending, logo } = this.state;
-		const { options } = this.props;
+		const { demoStoreNotice } = this.props;
 
 		if ( logo && ! logo.url && ! isPending ) {
 			/* eslint-disable react/no-did-update-set-state */
@@ -86,12 +86,12 @@ class Appearance extends Component {
 		}
 
 		if (
-			options.demoStoreNotice &&
-			prevProps.options.demoStoreNotice !== options.demoStoreNotice
+			demoStoreNotice &&
+			prevProps.demoStoreNotice !== demoStoreNotice
 		) {
 			/* eslint-disable react/no-did-update-set-state */
 			this.setState( {
-				storeNoticeText: options.demoStoreNotice,
+				storeNoticeText: demoStoreNotice,
 			} );
 			/* eslint-enable react/no-did-update-set-state */
 		}
